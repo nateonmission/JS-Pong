@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+*, ::before, ::after {
+    box-sizing: border-box
+}
+
+:root {
+    --hue: 100;
+    --saturation: 0%;
+    --foreground-color: hsl(var(--hue), var(--saturation), 75%);
+    --background-color: hsl(var(--hue), var(--saturation), 20%);
+}
+
+body{
+    margin: 0;
+    background-color: var(--background-color);
+    display: flex;
+    flex-direction: column;
+}
+
+#scoreboard {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+}
+
+.playerScore {
+    margin: 1REM;
+    display: inline;
+    font-size: 2REM;
+    color: var(--foreground-color);
+    font-family: 'Press Start 2P', cursive;
+}
+
+#player1score {
+    
+}
+
+#player2score {
+    
+}
+
+#ball {
+    --x: 50;
+    --y:50;
+
+    left: calc(var(--x) * 1vh);
+    top: calc(var(--y) * 1vh);
+    transform: translate(-50%, -50%);
+    
+    position: absolute;
+    background-color: var(--foreground-color);
+    height: 1.5vh;
+    width: 1.5vh;
+    /*border-radius: 50%;*/
+}
+
+.playerPaddle {
+    --position: 50;
+
+    position: absolute;
+    background-color: var(--foreground-color);
+    width: 1vh;
+    height: 10vh;
+    top: calc(var(--position) * 1vh);
+    transform: translateY(-50%);
+}
+
+#player1paddle {
+    left: 1vh;
+}
+
+#player2paddle {
+    right: 1vw;
+}
