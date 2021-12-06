@@ -47,7 +47,7 @@ body{
 
     left: calc(var(--x) * 1vh);
     top: calc(var(--y) * 1vh);
-    transform: translate(-50%, -50%);
+    transform: translate(50%, -50%);
     
     position: absolute;
     background-color: var(--foreground-color);
