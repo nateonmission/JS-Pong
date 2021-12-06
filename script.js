@@ -53,27 +53,59 @@ class Player {
 }
 
 class Ball {
-    constructor() {
-        this.x = 0;
-        this.y = 0;
-        this.speed = 0.01;
+    constructor(ballDiv) {
+        this.ballDiv = ballDiv
+        this.x;
+        this.y;
+        this.direction;
+        this.speed;
+    }   
 
+    get x() {
+        return parseFloat(getComputedStyle(this.ballDiv).getPropertyValue("--x"));
     }
 
-    
+    get y() {
+        return parseFloat(getComputedStyle(this.ballDiv).getPropertyValue("--y"));
+    }
+
+    set x(newValue) {
+        this.ballDiv.style.setProperty("--x",newValue)
+    }
+
+    set y(newValue) {
+        this.ballDiv.style.setProperty("--y",newValue)
+    }
+
+    move (timeDelta) {
+        this.x = 5;
+        this.y = 15;
+    }
+
+    reset() {
+        this.x = 50;
+        this.y = 50;
+        this.direction = { x: 0 }
+        while(
+            Math.abs(this.direction.x) <= 0.2 || 
+            Math.abs(this.direction.x) >= 0.8) {
+            const heading = randomInt(0, 2 * Math.PI);
+            this.direction = { x: Math.cos(heading), y: Math.sin(heading) }
+        }
+        console.log(this.direction);
+    }
 }
 
 class Paddle {
     constructor(paddleDiv) {
         this.paddle = paddleDiv;
     }
-
 }
 
 
 
 // Instantiate the things
-const ball = new Ball();
+const ball = new Ball(ballDiv);
 const paddle1 = new Paddle(player1paddle);
 const paddle2 = new Paddle(player2paddle);
 const player1 = new Player(1, paddle1, false);
@@ -84,6 +116,12 @@ player2.pointCounter = 23;
 
 
 // Define game functions
+
+
+const randomInt = (min, max) => { // inclusive 
+    return Math.random() * (max - min) + min
+  }
+
 const updateScore = () => {
     player1score.innerHTML = `${player1.pointCounter} Points<br>${player1.gamesWon} Games Won`;
     player2score.innerHTML = `${player2.pointCounter} Points<br>${player2.gamesWon} Games Won`;
@@ -109,7 +147,34 @@ let playOn = true;
 //     }
 
 // }
- 
+
 updateScore();
+
+let timeTracker;
+const update = (time) => {
+    if(timeTracker != null){
+        const timeDelta = time - timeTracker;
+        timeTracker = time;
+        ball.move(timeDelta);
+        ball.reset();
+
+        window.requestAnimationFrame(update);
+    } else {
+        timeTracker = time;
+        window.requestAnimationFrame(update);
+    }
+
+    console.log("game loop")
+}
+ 
+// setInterval(update, 10);
+
+
+    window.requestAnimationFrame(update);
+
+
+console.log("End")
+
+
 
 
