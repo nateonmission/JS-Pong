@@ -1,4 +1,3 @@
-
 // Build the Board
 const body = document.querySelector("body");
 
@@ -12,8 +11,6 @@ player2score.setAttribute("class","playerScore");
 
 const scoreboard = document.createElement("div");
 scoreboard.setAttribute("id","scoreboard")
-
-
 
 const player1paddle = document.createElement("div");
 player1paddle.setAttribute("id","player1paddle");
@@ -32,6 +29,10 @@ scoreboard.append(player2score);
 body.append(player1paddle);
 body.append(player2paddle);
 body.append(ballDiv);
+
+const randomInt = (min, max) => { // inclusive 
+    return Math.random() * (max - min) + min
+}
 
 // Define the classes
 class Player {
@@ -55,10 +56,10 @@ class Player {
 class Ball {
     constructor(ballDiv) {
         this.ballDiv = ballDiv
-        this.x;
-        this.y;
-        this.direction;
-        this.speed;
+        this.initVelocity =  0.025;
+        this.acceleration = 0.00001;
+        
+        this.reset()
     }   
 
     get x() {
@@ -77,22 +78,44 @@ class Ball {
         this.ballDiv.style.setProperty("--y",newValue)
     }
 
+    getRect() {
+        return ballDiv.getBoundingClientRect();
+
+    }
+
+
+
     move (timeDelta) {
-        this.x = 5;
-        this.y = 15;
+        this.x += timeDelta * this.direction.x * this.velocity ;
+        this.y += timeDelta * this.direction.y * this.velocity ;
+        let winInH = window.innerHeight;
+        let winInW = window.innerWidth;
+        console.log(`${winInH} x ${winInW}`)
+        console.log(`${this.x/100 * winInW} , ${this.y/100 * winInH}`)
+
+
+        // location = this.getRect();
+        
+        if(((this.y/100 * winInH)+6) >= window.innerHeight || ((this.y/100 * winInH)-6) <= 0){
+            this.direction.y *= -1;
+        }
+
+        if(((this.x/100 * winInW)+6) >= window.innerWidth || ((this.x/100 * winInW)-6) <= 0){
+            this.direction.x *= -1;
+        }
     }
 
     reset() {
         this.x = 50;
         this.y = 50;
-        this.direction = { x: 0 }
+        this.direction = { x: 0 };
         while(
-            Math.abs(this.direction.x) <= 0.2 || 
-            Math.abs(this.direction.x) >= 0.8) {
+            Math.abs(this.direction.x) <= 0.1 || 
+            Math.abs(this.direction.x) >= 0.9) {
             const heading = randomInt(0, 2 * Math.PI);
-            this.direction = { x: Math.cos(heading), y: Math.sin(heading) }
+            this.direction = { x: Math.cos(heading), y: Math.sin(heading) };
         }
-        console.log(this.direction);
+        this.velocity = this.initVelocity;
     }
 }
 
@@ -101,8 +124,6 @@ class Paddle {
         this.paddle = paddleDiv;
     }
 }
-
-
 
 // Instantiate the things
 const ball = new Ball(ballDiv);
@@ -114,67 +135,43 @@ const player2 = new Player(1, paddle2, false);
 player1.pointCounter = 15;
 player2.pointCounter = 23;
 
-
-// Define game functions
-
-
-const randomInt = (min, max) => { // inclusive 
-    return Math.random() * (max - min) + min
-  }
-
 const updateScore = () => {
     player1score.innerHTML = `${player1.pointCounter} Points<br>${player1.gamesWon} Games Won`;
     player2score.innerHTML = `${player2.pointCounter} Points<br>${player2.gamesWon} Games Won`;
 }
 
-
 // Game variables
-var today = new Date();
+body.addEventListener("keydown", e => {
+    if(e.keyCode == "88"){
+        playOn = false;
+    }
+}, false);
+
 let lastTime = null;
 let timeDelta = 0;
-
 let playOn = true;
 
-
 // Game Loop
-
-// while(playOn) {
-//     if (lastTime === null){
-//         lastTime = today;
-//     } else {
-//         timeDelta = today - lastTime;
-//         console.log(timeDelta);
-//     }
-
-// }
-
 updateScore();
 
 let timeTracker;
 const update = (time) => {
-    if(timeTracker != null){
-        const timeDelta = time - timeTracker;
-        timeTracker = time;
-        ball.move(timeDelta);
-        ball.reset();
-
-        window.requestAnimationFrame(update);
-    } else {
-        timeTracker = time;
-        window.requestAnimationFrame(update);
+    if(playOn){
+        if(timeTracker != null){
+            const timeDelta = time - timeTracker;
+            timeTracker = time;
+            ball.move(timeDelta);
+            //console.log(ball.direction)
+            window.requestAnimationFrame(update);
+        } else {
+            timeTracker = time;
+            window.requestAnimationFrame(update);
+        }
     }
-
-    console.log("game loop")
 }
- 
-// setInterval(update, 10);
 
-
+if(playOn){
     window.requestAnimationFrame(update);
+}
 
-
-console.log("End")
-
-
-
-
+console.log("End of File");
