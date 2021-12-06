@@ -28,7 +28,7 @@ body{
 .playerScore {
     margin: 1REM;
     display: inline;
-    font-size: 2REM;
+    font-size: 1REM;
     color: var(--foreground-color);
     font-family: 'Press Start 2P', cursive;
 }

@@ -40,6 +40,7 @@ class Player {
         this.paddle = paddle;
         this.isComputer = isComputer;
         this.pointCounter = 0;
+        this.gamesWon = 0;
     }
 
     score() {
@@ -84,8 +85,8 @@ player2.pointCounter = 23;
 
 // Define game functions
 const updateScore = () => {
-    player1score.innerText = player1.pointCounter;
-    player2score.innerText = player2.pointCounter;
+    player1score.innerHTML = `${player1.pointCounter} Points<br>${player1.gamesWon} Games Won`;
+    player2score.innerHTML = `${player2.pointCounter} Points<br>${player2.gamesWon} Games Won`;
 }
 
 
